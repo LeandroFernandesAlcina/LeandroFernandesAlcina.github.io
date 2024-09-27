@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <title>Movimento do Componente</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        canvas {
+            border: 1px solid #d3d3d3;
+            background-color: #A0A0A0;
+        }
+        button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+    <script>
+        var myGamePiece;
+        var intervalId;
+
+        function startGame() {
+            myGamePiece = new component(30, 30, "blue", 10, 120);
+            myGameArea.start();
+        }
+
+        var myGameArea = {
+            canvas: document.createElement("canvas"),
+            start: function() {
+                this.canvas.width = 480;
+                this.canvas.height = 270;
+                this.context = this.canvas.getContext('2d');
+                document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+                this.interval = setInterval(updateGameArea, 20);
+            },
+            clear: function() {
+                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            }
+        };
+
+        function component(width, height, color, x, y) {
+            this.width = width;
+            this.height = height;
+            this.x = x;
+            this.y = y;
+            this.update = function() {
+                ctx = myGameArea.context;
+                ctx.fillStyle = color;
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+            };
+        }
+
+        function updateGameArea() {
+            myGameArea.clear();
+            myGamePiece.update();
+        }
+
+        function moveUp() {
+            myGamePiece.y -= 10;
+            updateGameArea();
+        }
+
+        function moveDown() {
+            myGamePiece.y += 10;
+            updateGameArea();
+        }
+
+        function moveLeft() {
+            myGamePiece.x -= 10;
+            updateGameArea();
+        }
+
+        function moveRight() {
+            myGamePiece.x += 10;
+            updateGameArea();
+        }
+
+        function startMovement(direction) {
+            if (intervalId) return; // Impede múltiplos intervalos
+            intervalId = setInterval(() => {
+                if (direction === 'up') moveUp();
+                if (direction === 'down') moveDown();
+                if (direction === 'left') moveLeft();
+                if (direction === 'right') moveRight();
+            }, 100);
+        }
+
+        function stopMovement() {
+            clearInterval(intervalId);
+            intervalId = null;
+        }
+
+    </script>
+</head>
+<body onload="startGame();">
+    <button onmousedown="startMovement('up')" onmouseup="stopMovement()">Cima</button>
+    <button onmousedown="startMovement('down')" onmouseup="stopMovement()">Baixo</button>
+    <button onmousedown="startMovement('left')" onmouseup="stopMovement()">Esquerda</button>
+    <button onmousedown="startMovement('right')" onmouseup="stopMovement()">Direita</button>
+
+    <script>
+        // Para permitir movimento ao clicar nos botões
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', () => {
+                const direction = button.textContent.toLowerCase();
+                if (direction === 'cima') moveUp();
+                if (direction === 'baixo') moveDown();
+                if (direction === 'esquerda') moveLeft();
+                if (direction === 'direita') moveRight();
+            });
+        });
+    </script>
+</body>
+</html>
