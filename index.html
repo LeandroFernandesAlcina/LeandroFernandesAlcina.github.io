@@ -1,3 +1,14 @@
+<!--
+Programa: DIGITE AQUI O NOME DO PROGRAMA
+Nome: Daniel Gaziola de Oliveira  - Nº 03 - Turma: 2L
+Nome: Leandro Ghizelini Martins Ferandes - Nº: 17
+Nome: Natanel Madeira - Nº: 20
+DESCRIÇÃO: Crie um componente.
+Crie controles para este componente (botões na tela que direcionem o componente para a direita, para a esquerda, para cima e para baixo.
+Crie métodos independentes para start e stop dos componentes, estes métodos serão responsáveis por iniciar o movimento do componente e parar o movimento do componente.
+O componente deve ser movido quando o botão for pressionado e parar quando o botão for solto.
+-->
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -6,8 +17,8 @@
     <title>Movimento do Componente</title>
     <style>
         canvas {
-            border: 1px solid #d3d3d3;
-            background-color: #A0A0A0;
+            border: 1px solid #000000;
+            background-color: #ff3131;
         }
         button {
             margin: 5px;
@@ -16,45 +27,45 @@
         }
     </style>
     <script>
-        let myGamePiece, intervalId;
+        let myGamePiece, intervalId; // Componente(cuadrado) que sera usado no canvas e Id do intervalo para permitir o controle do movimento.
 
-        function startGame() {
+        function startGame() { // Essa função que forma o componente(quadrado) cor, posição inicia e a área do jogo.
             myGamePiece = new component(30, 30, "blue", 10, 120);
             myGameArea.start();
         }
 
         const myGameArea = {
-            canvas: document.createElement("canvas"),
+            canvas: document.createElement("canvas"), // Cria o canvas.
             start() {
-                this.canvas.width = 480;
-                this.canvas.height = 270;
+                this.canvas.width = 480; // Largura
+                this.canvas.height = 270; // Altura  
                 this.context = this.canvas.getContext('2d');
                 document.body.prepend(this.canvas);
-                this.interval = setInterval(updateGameArea, 20);
+                this.interval = setInterval(updateGameArea, 20); // inicia um intervalo para atualizar a área do jogo.
             },
-            clear() {
+            clear() { // Limpa o canvas antes de desenhar o nova posição do componente (quadrado).
                 this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
             }
         };
 
-        function component(width, height, color, x, y) {
+        function component(width, height, color, x, y) { // Define as propriedades do quadrado como cor, altura e largura.
             this.width = width;
             this.height = height;
             this.x = x;
             this.y = y;
-            this.update = function() {
+            this.update = function() { // Desenha no canvas o quadrado usando as propriedades dadas acima.
                 const ctx = myGameArea.context;
                 ctx.fillStyle = color;
                 ctx.fillRect(this.x, this.y, this.width, this.height);
             };
         }
 
-        function updateGameArea() {
-            myGameArea.clear();
+        function updateGameArea() { // Limpa a área do jogo e atualiza a nova posição do quadrado.
+            myGameArea.clear(); 
             myGamePiece.update();
         }
 
-        function move(direction) {
+        function move(direction) { // Move o quadrado para cima, baixo, esquerda e direita e atualiza a área dele.
             if (direction === 'up') myGamePiece.y -= 10;
             if (direction === 'down') myGamePiece.y += 10;
             if (direction === 'left') myGamePiece.x -= 10;
@@ -62,12 +73,12 @@
             updateGameArea();
         }
 
-        function startMovement(direction) {
+        function startMovement(direction) { // Movimento contínuo do quadrado confrome a direção dada e enquanto o botão estiver pressionado.
             if (intervalId) return;
             intervalId = setInterval(() => move(direction), 100);
         }
 
-        function stopMovement() {
+        function stopMovement() { // Quando o botão que estiver sendo segurado e parar(soltar) ele vai parar de se mexer.
             clearInterval(intervalId);
             intervalId = null;
         }
